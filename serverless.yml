@@ -1,20 +1,31 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: devjoaolopes
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: api-rest-aws-lambda
 service: api-rest-aws-lambda
 
 provider:
   name: aws
+  profile: devjoaolopes
   runtime: nodejs20.x
   region: us-east-1
-  environment:
-    NODE_ENV: production
+  # environment:
+  #   NODE_ENV: production
     # DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
 
 functions:
   api:
     handler: dist/main.handler
     events:
-      - httpApi:
-          path: /{proxy+}
+      # - httpApi:
+      #     path: /{proxy+}
+      #     method: ANY
+      - http:
           method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
 
 # resources:
 #   Resources:
@@ -37,3 +48,7 @@ plugins:
 # custom:
 #   dotenv:
 #     path: ./config/.env
+
+package:
+  patterns:
+    - '!node_modules/**'
